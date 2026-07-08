@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Luxury Boutique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="./img/logo.png" alt="Status Luxury Boutique" class="main-logo">
+    </div>
+
+    <div id="admin-panel" class="admin-panel-wrapper" style="display: none;">
+        <button id="admin-add-btn" class="admin-full-btn">+ Додати товар</button>
+    </div>
+
+    <div class="sticky-nav-wrapper">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Пошук ексклюзиву...">
+        </div>
+
+        <div class="categories-scroll">
+            <div class="category-item active">Усі товари</div>
+            <div class="category-item">Костюми</div>
+            <div class="category-item">Взуття</div>
+            <div class="category-item">Аксесуари</div>
+            <div class="category-item">Годинники</div>
+            <div class="category-item">Парфуми</div>
+        </div>
+    </div>
+
+    <div class="product-grid">
+        
+        <div class="product-card">
+            <div class="product-img">
+                <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Saint Laurent Gaby Vanity Bag</h2>
+                <p class="product-desc">Сумка, яка легко стане головним акцентом образу. Витончений силует, фірмова ромбова стібка, золотиста фурнітура та продуманий формат vanity — поєднання, що завжди виглядає дорого.</p>
+                <div class="product-price">4 500 ₴</div>
+                <div class="btn-group">
+                    <div class="btn btn-outline btn-detail">Детальніше</div>
+                    <div class="btn btn-filled btn-add">Додати</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-img">
+                <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Saint Laurent Gaby Vanity Bag</h2>
+                <p class="product-desc">Сумка, яка легко стане головним акцентом образу. Витончений силует, фірмова ромбова стібка, золотиста фурнітура та продуманий формат vanity — поєднання, що завжди виглядає дорого.</p>
+                <div class="product-price">4 500 ₴</div>
+                <div class="btn-group">
+                    <div class="btn btn-outline btn-detail">Детальніше</div>
+                    <div class="btn btn-filled btn-add">Додати</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-img">
+                <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Saint Laurent Gaby Vanity Bag</h2>
+                <p class="product-desc">Сумка, яка легко стане головним акцентом образу. Витончений силует, фірмова ромбова стібка, золотиста фурнітура та продуманий формат vanity — поєднання, що завжди виглядає дорого.</p>
+                <div class="product-price">4 500 ₴</div>
+                <div class="btn-group">
+                    <div class="btn btn-outline btn-detail">Детальніше</div>
+                    <div class="btn btn-filled btn-add">Додати</div>
+                </div>
+            </div>
+        </div>
+
+    </div> <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" data-modal="detailModal">&times;</button>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carousel-track">
+                    <img src="./img/Bag1.jpg" class="carousel-slide">
+                    <img src="./img/Bag2.jpg" class="carousel-slide">
+                    <img src="./img/Bag3.jpg" class="carousel-slide">
+                    <img src="./img/Bag4.jpg" class="carousel-slide">
+                    <img src="./img/Bag5.jpg" class="carousel-slide">
+                </div>
+            </div>
+            <h2 class="product-title">Класичний Чорний Костюм</h2>
+            <p class="product-desc">
+                Повний опис товару. Італійська вовна, ручна робота та суворий контроль якості на кожному етапі. 
+                <br><br>Ми продумали кожну деталь, щоб цей елемент гардеробу став ідеальною інвестицією у твій імідж.
+            </p>
+            <div class="product-price" style="margin-top: 20px;">18 500 ₴</div>
+            <div class="btn btn-filled" style="width: 100%; margin-top: 10px;" id="btnModalAddToCart">ДОДАТИ В КОШИК</div>
+        </div>
+    </div>
+
+    <div id="cartFab" class="cart-fab">
+        🛍️<div id="cartBadge" class="cart-badge">0</div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" data-modal="cartModal">&times;</button>
+            <h2 class="cart-header">КОШИК</h2>
+            
+            <div class="cart-item">
+                <div class="cart-item-img"></div>
+                <div class="cart-item-info">
+                    <div class="product-title" style="font-size: 15px; margin-bottom: 4px;">Класичний Чорний Костюм</div>
+                    <div style="color: #aaa; font-size: 13px;">1 шт. x 18 500 ₴</div>
+                </div>
+                <button class="remove-item-btn">&times;</button>
+            </div>
+            
+            <div class="cart-total">
+                <span>Разом:</span>
+                <span>18 500 ₴</span>
+            </div>
+            <div class="btn btn-filled" style="width: 100%; padding: 18px 0;">ДАЛІ (ОФОРМИТИ)</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

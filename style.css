@@ -316,6 +316,29 @@ h1, h2, h3, .logo {
     flex-shrink: 0;
 }
 
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: -5px;
+    margin-bottom: 15px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: var(--gold, #e0b84c); 
+    transform: scale(1.2);
+    width: 18px;
+    border-radius: 4px;
+}
+
 .close-btn { 
     position: absolute; 
     top: 15px; right: 15px; 

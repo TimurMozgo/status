@@ -34,7 +34,7 @@
 
     <div class="product-grid">
         
-        <div class="product-card">
+        <div class="product-card" data-images="./img/Bag1.jpg, ./img/Bag2.jpg, ./img/Bag3.jpg, ./img/Bag4.jpg, ./img/Bag5.jpg">
             <div class="product-img">
                 <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
             </div>
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-images="./img/Bag1.jpg, ./img/Bag2.jpg, ./img/Bag3.jpg, ./img/Bag4.jpg, ./img/Bag5.jpg">
             <div class="product-img">
                 <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
             </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-images="./img/Bag1.jpg, ./img/Bag2.jpg, ./img/Bag3.jpg, ./img/Bag4.jpg, ./img/Bag5.jpg">
             <div class="product-img">
                 <img src="./img/Bag1.jpg" alt="Saint Laurent Gaby Vanity Bag">
             </div>
@@ -79,24 +79,22 @@
             </div>
         </div>
 
-    </div> <div id="detailModal" class="modal">
+    <div id="detailModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" data-modal="detailModal">&times;</button>
+            
             <div class="carousel-container">
-                <div class="carousel-track" id="carousel-track">
-                    <img src="./img/Bag1.jpg" class="carousel-slide">
-                    <img src="./img/Bag2.jpg" class="carousel-slide">
-                    <img src="./img/Bag3.jpg" class="carousel-slide">
-                    <img src="./img/Bag4.jpg" class="carousel-slide">
-                    <img src="./img/Bag5.jpg" class="carousel-slide">
-                </div>
+                <div class="carousel-track" id="modalCarouselTrack"></div>
             </div>
-            <h2 class="product-title">Класичний Чорний Костюм</h2>
+            
+            <div class="carousel-dots" id="modalCarouselDots"></div>
+
+            <h2 class="product-title">Saint Laurent Gaby Vanity Bag</h2>
             <p class="product-desc">
                 Повний опис товару. Італійська вовна, ручна робота та суворий контроль якості на кожному етапі. 
                 <br><br>Ми продумали кожну деталь, щоб цей елемент гардеробу став ідеальною інвестицією у твій імідж.
             </p>
-            <div class="product-price" style="margin-top: 20px;">18 500 ₴</div>
+            <div class="product-price" style="margin-top: 20px;">4 500 ₴</div>
             <div class="btn btn-filled" style="width: 100%; margin-top: 10px;" id="btnModalAddToCart">ДОДАТИ В КОШИК</div>
         </div>
     </div>
@@ -110,18 +108,11 @@
             <button class="close-btn" data-modal="cartModal">&times;</button>
             <h2 class="cart-header">КОШИК</h2>
             
-            <div class="cart-item">
-                <div class="cart-item-img"></div>
-                <div class="cart-item-info">
-                    <div class="product-title" style="font-size: 15px; margin-bottom: 4px;">Класичний Чорний Костюм</div>
-                    <div style="color: #aaa; font-size: 13px;">1 шт. x 18 500 ₴</div>
-                </div>
-                <button class="remove-item-btn">&times;</button>
-            </div>
+            <div id="cartItemsContainer"></div>
             
             <div class="cart-total">
                 <span>Разом:</span>
-                <span>18 500 ₴</span>
+                <span id="cartTotalValue">0 ₴</span>
             </div>
             <div class="btn btn-filled" style="width: 100%; padding: 18px 0;">ДАЛІ (ОФОРМИТИ)</div>
         </div>

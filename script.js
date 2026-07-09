@@ -13,10 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailModal = document.getElementById('detailModal');
     const cartModal = document.getElementById('cartModal');
     const cartBadge = document.getElementById('cartBadge');
+
+    const fullscreenTrack = document.getElementById('fullscreenTrack');
+    const fullscreenContainer = document.getElementById('fullscreenContainer');
+    const fullscreenOverlay = document.getElementById('fullscreenOverlay');
     
     // Динамические элементы корзины
     const cartItemsContainer = document.getElementById('cartItemsContainer');
     const cartTotalValue = document.getElementById('cartTotalValue');
+
+    // Аи ассистент
+    const aiChatFab = document.getElementById('aiChatFab');
+    const aiChatModal = document.getElementById('aiChatModal');
+    const closeAiChatBtn = document.getElementById('closeAiChatBtn');
+    const aiChatSendBtn = document.getElementById('aiChatSendBtn');
+    const aiChatInput = document.getElementById('aiChatInput');
+    const aiChatMessages = document.getElementById('aiChatMessages');
 
     // Элементы динамической карусели в модалке
     const carouselTrack = document.getElementById('modalCarouselTrack');
@@ -112,33 +124,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция сборки динамической карусели и логики индикаторов-точек
     function setupModalCarousel(imagesArray) {
-        if (!carouselTrack || !carouselDots) return;
+        if (!carouselTrack || !carouselDots || !fullscreenTrack) return;
 
-        // Полный сброс старых данных
+        // Полный сброс старых данных в обеих каруселях
         carouselTrack.innerHTML = '';
         carouselDots.innerHTML = '';
+        fullscreenTrack.innerHTML = '';
 
         if (!imagesArray || imagesArray.length === 0 || imagesArray[0] === "") return;
 
-        // Генерируем слайды и точки
+        // Настройки контейнера модалки
+        if (carouselContainer) {
+            carouselContainer.style.overflowX = 'auto';
+            carouselContainer.style.overflowY = 'hidden';
+            carouselContainer.style.scrollSnapType = 'x mandatory';
+            carouselContainer.style.scrollBehavior = 'smooth';
+            carouselContainer.style.display = 'block';
+            carouselContainer.scrollLeft = 0; 
+        }
+        
+        carouselTrack.style.display = 'flex';
+        carouselTrack.style.flexDirection = 'row';
+        carouselTrack.style.width = '100%';
+        carouselTrack.style.height = '100%';
+
+        // Генерируем слайды параллельно для двух каруселей
         imagesArray.forEach((imgUrl, index) => {
+            const trimmedUrl = imgUrl.trim();
+
+            // Слайд для маленькой карусели в модалке
             const img = document.createElement('img');
-            img.src = imgUrl.trim();
+            img.src = trimmedUrl;
             img.classList.add('carousel-slide');
+            img.setAttribute('data-index', index); // Маркируем индекс слайда
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.flexShrink = '0';
+            img.style.scrollSnapAlign = 'start';
+            img.style.objectFit = 'contain';
             carouselTrack.appendChild(img);
 
+            // Слайд для полноэкранной карусели
+            const fullscreenSlide = document.createElement('div');
+            fullscreenSlide.classList.add('fullscreen-slide');
+            
+            const fsImg = document.createElement('img');
+            fsImg.src = trimmedUrl;
+            
+            fullscreenSlide.appendChild(fsImg);
+            fullscreenTrack.appendChild(fullscreenSlide);
+
+            // Точка-индикатор
             const dot = document.createElement('div');
             dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active'); // Первая точка активна сразу
+            if (index === 0) dot.classList.add('active'); 
             carouselDots.appendChild(dot);
         });
 
-        // Следим за свайпом и переключаем точки
+        // Следим за скроллом маленькой карусели
         if (carouselContainer) {
-            carouselContainer.scrollLeft = 0; // Всегда сбрасываем скролл в начало при генерации
-
             carouselContainer.onscroll = () => {
                 const width = carouselContainer.clientWidth;
+                if (width === 0) return;
                 const currentIndex = Math.round(carouselContainer.scrollLeft / width);
                 
                 const dots = carouselDots.querySelectorAll('.dot');
@@ -225,6 +272,133 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal(e.target);
         }
     });
+
+    // Открытие чата
+    if (aiChatFab && aiChatModal) {
+        aiChatFab.addEventListener('click', (e) => {
+            e.preventDefault();
+            aiChatModal.classList.add('active'); 
+            
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
+            
+            setTimeout(() => {
+                if (aiChatInput) aiChatInput.focus();
+            }, 350);
+        });
+    }
+
+    // Жесткое закрытие чата по клику на выделенный крестик
+    if (closeAiChatBtn && aiChatModal) {
+        closeAiChatBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            aiChatModal.classList.remove('active');
+        });
+    }
+
+    // Закрытие чата по клику на пустую область вокруг него
+    if (aiChatModal) {
+        aiChatModal.addEventListener('click', (e) => {
+            if (e.target === aiChatModal) {
+                aiChatModal.classList.remove('active');
+            }
+        });
+    }
+
+    // Функция отправки сообщения
+    async function sendUserMessage() {
+        const text = aiChatInput.value.trim();
+        if (!text) return;
+
+        // 1. Моментально відображаємо повідомлення користувача в чаті
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.classList.add('msg', 'message-user');
+        userMsgDiv.textContent = text;
+        aiChatMessages.appendChild(userMsgDiv);
+
+        // Очищаємо поле введення і скроллимо вниз
+        aiChatInput.value = '';
+        aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+        // Включаємо вібровідгук кліку для Telegram
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
+
+        // 2. Створюємо плашку очікування "STATUS AI думає..."
+        const typingDiv = document.createElement('div');
+        typingDiv.classList.add('msg', 'message-ai');
+        typingDiv.style.fontStyle = 'italic';
+        typingDiv.style.opacity = '0.7';
+        typingDiv.textContent = '...';
+        aiChatMessages.appendChild(typingDiv);
+        aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+
+        try {
+            // 3. Відправляємо POST-запит на твій тестовий вебхук n8n
+            const response = await fetch('https://tiktiok.xyz/webhook/370e426a-157a-4fd2-b46c-9e71d9bb17dd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    message: text,
+                    // Унікальний ID користувача з TG для збереження пам'яті в n8n
+                    chat_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'demo_session_1' 
+                })
+            });
+
+            // Видаляємо плашку очікування
+            typingDiv.remove();
+
+            if (!response.ok) throw new Error('Сервер повернув помилку');
+
+            // Отримуємо відповідь від n8n
+            const data = await response.json();
+            
+            // Забираємо текст відповіді (перевіряємо різні філди, які може повернути n8n)
+            const aiText = data.output || data.response || data.text || JSON.stringify(data);
+
+            // 4. Рендерим чистий український текст відповіді нашого Аудитора
+            const aiMsgDiv = document.createElement('div');
+            aiMsgDiv.classList.add('msg', 'message-ai');
+            aiMsgDiv.textContent = aiText; 
+            aiChatMessages.appendChild(aiMsgDiv);
+            
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+            
+            // Вібровідгук успішного отримання відповіді
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            }
+
+        } catch (error) {
+            console.error('Помилка вебхука n8n:', error);
+            typingDiv.remove();
+            
+            // Якщо вебхук вимкнений або впав — видаємо солідну помилку
+            const errorDiv = document.createElement('div');
+            errorDiv.classList.add('msg', 'message-ai');
+            errorDiv.textContent = 'Вибачте, виникла помилка зв\'язку з сервером сервісу. Спробуйте надіслати повідомлення ще раз.';
+            aiChatMessages.appendChild(errorDiv);
+            aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+        }
+    }
+
+    // Слухачі подій (залишаються, але тепер вони викликають нову асинхронну функцію)
+    if (aiChatSendBtn) {
+        aiChatSendBtn.addEventListener('click', sendUserMessage);
+    }
+
+    if (aiChatInput) {
+        aiChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendUserMessage();
+            }
+        });
+    }
 
     // Первичная инициализация пустой корзины при старте страницы
     renderCart();
